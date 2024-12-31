@@ -14,6 +14,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       height: 100vh;
       overflow: hidden;
     }
@@ -52,17 +53,32 @@
         opacity: 0;
       }
     }
+    .share-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #ff9800;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .share-button:hover {
+      background-color: #e68900;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Happy New Year 2025!</h1>
     <p id="countdown">Countdown: 00:00:00</p>
+    <button class="share-button" id="shareBtn">Bagikan ke Teman</button>
     <div id="fireworks"></div>
   </div>
   <script>
     const countdownElement = document.getElementById('countdown');
     const fireworksElement = document.getElementById('fireworks');
+    const shareButton = document.getElementById('shareBtn');
 
     function updateCountdown() {
       const now = new Date();
@@ -82,10 +98,10 @@
     }
 
     function startFireworks() {
-      for (let i = 0; i < 5; i++) { // Hanya 5 ledakan per batch
+      for (let i = 0; i < 5; i++) {
         createExplosion(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
       }
-      setTimeout(startFireworks, 800); // Petasan muncul tiap 800ms
+      setTimeout(startFireworks, 800);
     }
 
     function createExplosion(x, y) {
@@ -96,7 +112,7 @@
       explosion.style.background = getRandomColor();
       fireworksElement.appendChild(explosion);
 
-      setTimeout(() => explosion.remove(), 1000); // Hapus ledakan setelah 1 detik
+      setTimeout(() => explosion.remove(), 1000);
     }
 
     function getRandomColor() {
@@ -104,8 +120,27 @@
       return colors[Math.floor(Math.random() * colors.length)];
     }
 
+    function sharePage() {
+      const shareData = {
+        title: 'Happy New Year 2025',
+        text: 'Cek countdown Happy New Year 2025 ini!',
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData)
+          .then(() => console.log('Berhasil dibagikan!'))
+          .catch((error) => console.error('Gagal dibagikan:', error));
+      } else {
+        // Fallback: Salin link
+        navigator.clipboard.writeText(shareData.url)
+          .then(() => alert('Link berhasil disalin ke clipboard!'))
+          .catch(() => alert('Gagal menyalin link.'));
+      }
+    }
+
+    shareButton.addEventListener('click', sharePage);
     setInterval(updateCountdown, 1000);
   </script>
 </body>
-  </html>
-  
+</html>
